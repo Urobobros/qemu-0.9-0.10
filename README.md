@@ -36,5 +36,3 @@ cd qemu-0.10.0
 make
 sudo make install
 ```
-
-
