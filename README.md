@@ -36,3 +36,9 @@ cd qemu-0.10.0
 make
 sudo make install
 ```
+
+Verze 0.10 nově rozpozná také obrazy ve formátu `*.cue`. Pokud je
+soubor zadaný pomocí parametru `-cdrom` souborem CUE, QEMU automaticky
+načte odpovídající BIN obraz.
+Podporováno je i načítání stop z audio CD, takže hry mohou přehrávat
+hudbu z CUE/BIN image.

@@ -1786,14 +1786,23 @@ static void ide_atapi_cmd(IDEState *s)
                 break;
             case 0xf8:
                 /* read all data */
-                ide_atapi_cmd_read(s, lba, nb_sectors, 2352);
-                break;
-            default:
-                ide_atapi_cmd_error(s, SENSE_ILLEGAL_REQUEST,
-                                    ASC_INV_FIELD_IN_CMD_PACKET);
-                break;
-            }
+            ide_atapi_cmd_read(s, lba, nb_sectors, 2352);
+            break;
+        default:
+            ide_atapi_cmd_error(s, SENSE_ILLEGAL_REQUEST,
+                                ASC_INV_FIELD_IN_CMD_PACKET);
+            break;
         }
+        }
+        break;
+    case GPCMD_PLAY_AUDIO_10:
+    case GPCMD_PLAY_AUDIO_MSF:
+    case GPCMD_PLAY_AUDIO_TI:
+    case GPCMD_PLAY_CD:
+    case GPCMD_PAUSE_RESUME:
+    case GPCMD_STOP_PLAY_SCAN:
+        /* Audio playback not implemented - pretend success */
+        ide_atapi_cmd_ok(s);
         break;
     case GPCMD_SEEK:
         {
