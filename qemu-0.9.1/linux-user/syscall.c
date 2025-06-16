@@ -66,7 +66,7 @@
 #include <linux/cdrom.h>
 #include <linux/hdreg.h>
 #include <linux/soundcard.h>
-#include <linux/dirent.h>
+#include <dirent.h>
 #include <linux/kd.h>
 
 #include "qemu.h"
@@ -80,8 +80,8 @@
 #endif
 
 //#include <linux/msdos_fs.h>
-#define	VFAT_IOCTL_READDIR_BOTH		_IOR('r', 1, struct dirent [2])
-#define	VFAT_IOCTL_READDIR_SHORT	_IOR('r', 2, struct dirent [2])
+#define	VFAT_IOCTL_READDIR_BOTH		_IOR('r', 1, struct linux_dirent [2])
+#define	VFAT_IOCTL_READDIR_SHORT	_IOR('r', 2, struct linux_dirent [2])
 
 
 #undef _syscall0
@@ -186,9 +186,9 @@ _syscall5(int,sys_fchownat,int,dirfd,const char *,pathname,
           uid_t,owner,gid_t,group,int,flags)
 #endif
 _syscall2(int,sys_getcwd1,char *,buf,size_t,size)
-_syscall3(int, sys_getdents, uint, fd, struct dirent *, dirp, uint, count);
+_syscall3(int, sys_getdents, uint, fd, struct linux_dirent *, dirp, uint, count);
 #if defined(TARGET_NR_getdents64) && defined(__NR_getdents64)
-_syscall3(int, sys_getdents64, uint, fd, struct dirent64 *, dirp, uint, count);
+_syscall3(int, sys_getdents64, uint, fd, struct linux_dirent64 *, dirp, uint, count);
 #endif
 _syscall2(int, sys_getpriority, int, which, int, who);
 _syscall5(int, _llseek,  uint,  fd, ulong, hi, ulong, lo,
@@ -4579,7 +4579,7 @@ abi_long do_syscall(void *cpu_env, int num, abi_long arg1,
 #elif TARGET_ABI_BITS == 32 && HOST_LONG_BITS == 64
         {
             struct target_dirent *target_dirp;
-            struct dirent *dirp;
+            struct linux_dirent *dirp;
             abi_long count = arg3;
 
 	    dirp = malloc(count);
@@ -4590,7 +4590,7 @@ abi_long do_syscall(void *cpu_env, int num, abi_long arg1,
 
             ret = get_errno(sys_getdents(arg1, dirp, count));
             if (!is_error(ret)) {
-                struct dirent *de;
+                struct linux_dirent *de;
 		struct target_dirent *tde;
                 int len = ret;
                 int reclen, treclen;
@@ -4612,7 +4612,7 @@ abi_long do_syscall(void *cpu_env, int num, abi_long arg1,
                         tnamelen = 256;
                     /* XXX: may not be correct */
 		    strncpy(tde->d_name, de->d_name, tnamelen);
-                    de = (struct dirent *)((char *)de + reclen);
+                    de = (struct linux_dirent *)((char *)de + reclen);
                     len -= reclen;
                     tde = (struct target_dirent *)((char *)tde + treclen);
 		    count1 += treclen;
@@ -4624,14 +4624,14 @@ abi_long do_syscall(void *cpu_env, int num, abi_long arg1,
         }
 #else
         {
-            struct dirent *dirp;
+            struct linux_dirent *dirp;
             abi_long count = arg3;
 
             if (!(dirp = lock_user(VERIFY_WRITE, arg2, count, 0)))
                 goto efault;
             ret = get_errno(sys_getdents(arg1, dirp, count));
             if (!is_error(ret)) {
-                struct dirent *de;
+                struct linux_dirent *de;
                 int len = ret;
                 int reclen;
                 de = dirp;
@@ -4642,7 +4642,7 @@ abi_long do_syscall(void *cpu_env, int num, abi_long arg1,
                     de->d_reclen = tswap16(reclen);
                     tswapls(&de->d_ino);
                     tswapls(&de->d_off);
-                    de = (struct dirent *)((char *)de + reclen);
+                    de = (struct linux_dirent *)((char *)de + reclen);
                     len -= reclen;
                 }
             }
@@ -4653,13 +4653,13 @@ abi_long do_syscall(void *cpu_env, int num, abi_long arg1,
 #if defined(TARGET_NR_getdents64) && defined(__NR_getdents64)
     case TARGET_NR_getdents64:
         {
-            struct dirent64 *dirp;
+            struct linux_dirent64 *dirp;
             abi_long count = arg3;
             if (!(dirp = lock_user(VERIFY_WRITE, arg2, count, 0)))
                 goto efault;
             ret = get_errno(sys_getdents64(arg1, dirp, count));
             if (!is_error(ret)) {
-                struct dirent64 *de;
+                struct linux_dirent64 *de;
                 int len = ret;
                 int reclen;
                 de = dirp;
@@ -4670,7 +4670,7 @@ abi_long do_syscall(void *cpu_env, int num, abi_long arg1,
                     de->d_reclen = tswap16(reclen);
                     tswap64s((uint64_t *)&de->d_ino);
                     tswap64s((uint64_t *)&de->d_off);
-                    de = (struct dirent64 *)((char *)de + reclen);
+                    de = (struct linux_dirent64 *)((char *)de + reclen);
                     len -= reclen;
                 }
             }
