@@ -9,10 +9,11 @@ Debian environment. Use the following commands:
 docker build -t qemu-0.9.1 .
 ```
 
-To run an interactive shell inside the container:
+The build uses an out-of-tree directory to keep the source clean. To run an
+interactive shell and store the build results on the host, mount a volume:
 
 ```bash
-docker run -it --rm qemu-0.9.1
+docker run -it --rm -v "$PWD/output:/usr/local" qemu-0.9.1
 ```
 
-The build outputs are installed under `/usr/local` inside the container.
+The compiled binaries will appear in the `output` directory on the host.
