@@ -194,7 +194,7 @@ VGA BIOS.
 QEMU uses YM3812 emulation by Tatsuyuki Satoh.
 
 QEMU uses GUS emulation(GUSEMU32 @url{http://www.deinmeister.de/gusemu/})
-by Tibor "TS" Schütz.
+by Tibor "TS" SchÃ¼tz.
 
 CS4231A is the chip used in Windows Sound System and GUSMAX products
 
@@ -523,6 +523,9 @@ Cirrus Logic GD5446 Video card. All Windows versions starting from
 Windows 95 should recognize and use this graphic card. For optimal
 performances, use 16 bit color depth in the guest and the host OS.
 (This one is the default)
+@item s3virge
+S3 ViRGE compatible adapter. Implemented using the standard VGA core
+with S3 vendor and device identifiers.  QEMU does not ship an S3 VGA BIOS, so use @code{-option-rom} to load an appropriate ROM image.
 @item std
 Standard VGA card with Bochs VBE extensions.  If your guest OS
 supports the VESA 2.0 VBE extensions (e.g. Windows XP) and if you want
@@ -2968,7 +2971,7 @@ MV88W8xx8 Ethernet controller
 @item
 MV88W8618 audio controller, WM8750 CODEC and mixer
 @item
-128�64 display with brightness control
+128×64 display with brightness control
 @item
 2 buttons, 2 navigation wheels with button function
 @end itemize

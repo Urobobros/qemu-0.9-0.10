@@ -149,6 +149,10 @@ void pci_cirrus_vga_init(PCIBus *bus, uint8_t *vga_ram_base,
                          ram_addr_t vga_ram_offset, int vga_ram_size);
 void isa_cirrus_vga_init(uint8_t *vga_ram_base,
                          ram_addr_t vga_ram_offset, int vga_ram_size);
+void pci_s3virge_vga_init(PCIBus *bus, uint8_t *vga_ram_base,
+                          ram_addr_t vga_ram_offset, int vga_ram_size);
+void isa_s3virge_vga_init(uint8_t *vga_ram_base,
+                          ram_addr_t vga_ram_offset, int vga_ram_size);
 
 /* ide.c */
 void isa_ide_init(int iobase, int iobase2, qemu_irq irq,

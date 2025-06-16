@@ -44,6 +44,7 @@
 #define BIOS_FILENAME "bios.bin"
 #define VGABIOS_FILENAME "vgabios.bin"
 #define VGABIOS_CIRRUS_FILENAME "vgabios-cirrus.bin"
+#define VGABIOS_S3VIRGE_FILENAME "vgabios-s3virge.bin"
 
 #define PC_MAX_BIOS_SIZE (4 * 1024 * 1024)
 
@@ -857,10 +858,12 @@ static void pc_init1(ram_addr_t ram_size, int vga_ram_size,
         exit(1);
     }
 
-    if (cirrus_vga_enabled || std_vga_enabled || vmsvga_enabled) {
+    if (cirrus_vga_enabled || std_vga_enabled || vmsvga_enabled || s3_vga_enabled) {
         /* VGA BIOS load */
         if (cirrus_vga_enabled) {
             snprintf(buf, sizeof(buf), "%s/%s", bios_dir, VGABIOS_CIRRUS_FILENAME);
+        } else if (s3_vga_enabled) {
+            snprintf(buf, sizeof(buf), "%s/%s", bios_dir, VGABIOS_S3VIRGE_FILENAME);
         } else {
             snprintf(buf, sizeof(buf), "%s/%s", bios_dir, VGABIOS_FILENAME);
         }
@@ -948,7 +951,16 @@ vga_bios_error:
 
     register_ioport_write(0xf0, 1, 1, ioportF0_write, NULL);
 
-    if (cirrus_vga_enabled) {
+    if (s3_vga_enabled) {
+        if (pci_enabled) {
+            pci_s3virge_vga_init(pci_bus,
+                                 phys_ram_base + vga_ram_addr,
+                                 vga_ram_addr, vga_ram_size);
+        } else {
+            isa_s3virge_vga_init(phys_ram_base + vga_ram_addr,
+                                 vga_ram_addr, vga_ram_size);
+        }
+    } else if (cirrus_vga_enabled) {
         if (pci_enabled) {
             pci_cirrus_vga_init(pci_bus,
                                 phys_ram_base + vga_ram_addr,
