@@ -1413,7 +1413,7 @@ static int disas_iwmmxt_insn(CPUState *env, DisasContext *s, uint32_t insn)
             gen_op_iwmmxt_subnb_M0_wRn(rd1);
             break;
         case 0x1:
-            gen_op_iwmmxt_subub_M0_wRn(rd1);
+            gen_op_iwmmxt_subub_M0_wRn();
             break;
         case 0x3:
             gen_op_iwmmxt_subsb_M0_wRn(rd1);
@@ -1422,7 +1422,7 @@ static int disas_iwmmxt_insn(CPUState *env, DisasContext *s, uint32_t insn)
             gen_op_iwmmxt_subnw_M0_wRn(rd1);
             break;
         case 0x5:
-            gen_op_iwmmxt_subuw_M0_wRn(rd1);
+            gen_op_iwmmxt_subuw_M0_wRn();
             break;
         case 0x7:
             gen_op_iwmmxt_subsw_M0_wRn(rd1);
@@ -1431,7 +1431,7 @@ static int disas_iwmmxt_insn(CPUState *env, DisasContext *s, uint32_t insn)
             gen_op_iwmmxt_subnl_M0_wRn(rd1);
             break;
         case 0x9:
-            gen_op_iwmmxt_subul_M0_wRn(rd1);
+            gen_op_iwmmxt_subul_M0_wRn();
             break;
         case 0xb:
             gen_op_iwmmxt_subsl_M0_wRn(rd1);
@@ -1469,7 +1469,7 @@ static int disas_iwmmxt_insn(CPUState *env, DisasContext *s, uint32_t insn)
             gen_op_iwmmxt_addnb_M0_wRn(rd1);
             break;
         case 0x1:
-            gen_op_iwmmxt_addub_M0_wRn(rd1);
+            gen_op_iwmmxt_addub_M0_wRn();
             break;
         case 0x3:
             gen_op_iwmmxt_addsb_M0_wRn(rd1);
@@ -1478,7 +1478,7 @@ static int disas_iwmmxt_insn(CPUState *env, DisasContext *s, uint32_t insn)
             gen_op_iwmmxt_addnw_M0_wRn(rd1);
             break;
         case 0x5:
-            gen_op_iwmmxt_adduw_M0_wRn(rd1);
+            gen_op_iwmmxt_adduw_M0_wRn();
             break;
         case 0x7:
             gen_op_iwmmxt_addsw_M0_wRn(rd1);
@@ -1487,7 +1487,7 @@ static int disas_iwmmxt_insn(CPUState *env, DisasContext *s, uint32_t insn)
             gen_op_iwmmxt_addnl_M0_wRn(rd1);
             break;
         case 0x9:
-            gen_op_iwmmxt_addul_M0_wRn(rd1);
+            gen_op_iwmmxt_addul_M0_wRn();
             break;
         case 0xb:
             gen_op_iwmmxt_addsl_M0_wRn(rd1);
@@ -1514,13 +1514,13 @@ static int disas_iwmmxt_insn(CPUState *env, DisasContext *s, uint32_t insn)
             return 1;
         case 1:
             if (insn & (1 << 21))
-                gen_op_iwmmxt_packsw_M0_wRn(rd1);
+                gen_op_iwmmxt_packsw_M0_wRn();
             else
                 gen_op_iwmmxt_packuw_M0_wRn(rd1);
             break;
         case 2:
             if (insn & (1 << 21))
-                gen_op_iwmmxt_packsl_M0_wRn(rd1);
+                gen_op_iwmmxt_packsl_M0_wRn();
             else
                 gen_op_iwmmxt_packul_M0_wRn(rd1);
             break;

@@ -1221,14 +1221,16 @@ void get_reloc_expr(char *name, int name_size, const char *sym_name)
     } else if (strstart(sym_name, "__op_gen_label", &p)) {
         snprintf(name, name_size, "gen_labels[param%s]", p);
     } else {
-#ifdef HOST_SPARC
+#if defined(HOST_SPARC) || defined(HOST_X86_64)
         if (sym_name[0] == '.')
             snprintf(name, name_size,
                      "(long)(&__dot_%s)",
                      sym_name + 1);
         else
-#endif
             snprintf(name, name_size, "(long)(&%s)", sym_name);
+#else
+        snprintf(name, name_size, "(long)(&%s)", sym_name);
+#endif
     }
 }
 
@@ -1454,28 +1456,20 @@ void gen_code(const char *name, host_ulong offset, host_ulong size,
 #if defined(HOST_I386) || defined(HOST_X86_64)
 #ifdef CONFIG_FORMAT_COFF
     {
-        uint8_t *p;
-        p = p_end - 1;
-        if (p == p_start)
+        int len = p_end - p_start;
+        if (len == 0)
             error("empty code for %s", name);
-        while (*p != 0xc3) {
-            p--;
-            if (p <= p_start)
-                error("ret or jmp expected at the end of %s", name);
-        }
-        copy_size = p - p_start;
+        if (p_end[-1] == 0xc3)
+            len--;
+        copy_size = len;
     }
 #else
     {
-        int len;
-        len = p_end - p_start;
+        int len = p_end - p_start;
         if (len == 0)
             error("empty code for %s", name);
-        if (p_end[-1] == 0xc3) {
+        if (p_end[-1] == 0xc3)
             len--;
-        } else {
-            error("ret or jmp expected at the end of %s", name);
-        }
         copy_size = len;
     }
 #endif
@@ -1741,13 +1735,13 @@ void gen_code(const char *name, host_ulong offset, host_ulong size,
                     !strstart(sym_name, "__op_param", NULL) &&
                     !strstart(sym_name, "__op_jmp", NULL) &&
                     !strstart(sym_name, "__op_gen_label", NULL)) {
-#if defined(HOST_SPARC)
-		    if (sym_name[0] == '.') {
-			fprintf(outfile,
-				"extern char __dot_%s __asm__(\"%s\");\n",
-				sym_name+1, sym_name);
-			continue;
-		    }
+#if defined(HOST_SPARC) || defined(HOST_X86_64)
+                    if (sym_name[0] == '.') {
+                        fprintf(outfile,
+                                "extern char __dot_%s __asm__(\"%s\");\n",
+                                sym_name+1, sym_name);
+                        continue;
+                    }
 #endif
 #if defined(__APPLE__)
                     /* Set __attribute((unused)) on darwin because we
@@ -1941,6 +1935,7 @@ void gen_code(const char *name, host_ulong offset, host_ulong size,
                                 reloc_offset, relname, addend);
                         break;
                     case R_X86_64_PC32:
+                    case R_X86_64_PLT32:
                         fprintf(outfile, "    *(uint32_t *)(gen_code_ptr + %d) = %s - (long)(gen_code_ptr + %d) + %d;\n",
                                 reloc_offset, relname, reloc_offset, addend);
                         break;

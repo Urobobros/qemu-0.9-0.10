@@ -97,7 +97,7 @@ BASE_LDFLAGS+=-static
 endif
 
 # We require -O2 to avoid the stack setup prologue in EXIT_TB
-OP_CFLAGS := -Wall -O2 -g -fno-strict-aliasing
+OP_CFLAGS := -Wall -O2 -fno-strict-aliasing
 
 # cc-option
 # Usage: OP_CFLAGS+=$(call cc-option, -falign-functions=0, -malign-functions=0)
@@ -600,6 +600,7 @@ gen-op.h: op.o $(DYNGEN)
 
 op.o: op.c
 	$(CC) $(OP_CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	objcopy --globalize-symbol=.LC1 --globalize-symbol=.LC2 $@
 
 # HELPER_CFLAGS is used for all the code compiled with static register
 # variables
