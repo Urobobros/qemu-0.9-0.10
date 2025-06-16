@@ -2,6 +2,10 @@
 
 include config-host.mak
 
+# Allow builds with modern GCC which defaults to -fno-common.
+# Older QEMU versions expect -fcommon for globals defined in headers.
+CFLAGS += -fcommon
+
 .PHONY: all clean distclean dvi info install install-doc tar tarbin \
 	speed test html dvi info
 
