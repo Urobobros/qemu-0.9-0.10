@@ -5,7 +5,8 @@
 extern "C" {
 #endif
 
-void slirp_init(int restrict, char *special_ip);
+/* rename parameter from 'restrict' to avoid C99 keyword clash */
+void slirp_init(int restrict_flag, char *special_ip);
 
 void slirp_select_fill(int *pnfds,
                        fd_set *readfds, fd_set *writefds, fd_set *xfds);
