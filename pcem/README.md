@@ -78,7 +78,9 @@ well. It is also possible they may not even build.
 The menu is a pop-up menu in the Linux/BSD port. Right-click on the main window when mouse is not
 captured.
 
-CD-ROM support currently only accesses `/dev/cdrom`. It has not been heavily tested.
+CD-ROM support can load `.iso` or `.cue` images (with associated `.bin` files) as well
+as real drives on `/dev/cdrom`. Use the `--load_cdrom` command line option or the
+menu to attach an image with audio tracks.
 
 ## Links
 
