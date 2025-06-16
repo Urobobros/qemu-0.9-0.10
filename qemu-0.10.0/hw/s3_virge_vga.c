@@ -12,8 +12,7 @@ typedef struct PCIS3VGAState {
 static void pci_s3vga_map(PCIDevice *d, int region_num,
                           uint32_t addr, uint32_t size, int type)
 {
-    VGAState *s = &container_of(d, PCIS3VGAState, dev)->vga;
-    vga_map(s, addr, size, type);
+    vga_map(d, region_num, addr, size, type);
 }
 
 static void pci_s3vga_write_config(PCIDevice *d, uint32_t address,

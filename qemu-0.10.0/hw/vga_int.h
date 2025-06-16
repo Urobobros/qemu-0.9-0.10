@@ -199,6 +199,9 @@ void vga_reset(void *s);
 void vga_dirty_log_start(VGAState *s);
 void vga_dirty_log_stop(VGAState *s);
 
+void vga_map(PCIDevice *pci_dev, int region_num,
+             uint32_t addr, uint32_t size, int type);
+
 uint32_t vga_mem_readb(void *opaque, target_phys_addr_t addr);
 void vga_mem_writeb(void *opaque, target_phys_addr_t addr, uint32_t val);
 void vga_invalidate_scanlines(VGAState *s, int y1, int y2);
