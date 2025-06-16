@@ -48,6 +48,7 @@
 #include <sys/dkio.h>
 #endif
 #ifdef __linux__
+#include <signal.h>
 #include <sys/ioctl.h>
 #include <linux/cdrom.h>
 #include <linux/fd.h>
