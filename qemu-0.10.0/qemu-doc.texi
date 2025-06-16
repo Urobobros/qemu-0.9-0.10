@@ -253,8 +253,11 @@ Use @var{file} as hard disk 0, 1, 2 or 3 image (@pxref{disk_images}).
 
 @item -cdrom @var{file}
 Use @var{file} as CD-ROM image (you cannot use @option{-hdc} and
-@option{-cdrom} at the same time). You can use the host CD-ROM by
-using @file{/dev/cdrom} as filename (@pxref{host_drives}).
+@option{-cdrom} at the same time).  If @var{file} is a @file{.cue}
+description, QEMU will automatically open the referenced @file{.bin}
+image and will emulate audio tracks so that CD music works. You can use
+the host CD-ROM by using @file{/dev/cdrom} as filename
+(@pxref{host_drives}).
 
 @item -drive @var{option}[,@var{option}[,@var{option}[,...]]]
 

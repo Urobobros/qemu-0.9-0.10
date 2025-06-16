@@ -81,6 +81,7 @@ int window_w, window_h, window_x, window_y, window_remember;
 int start_in_fullscreen = 0;
 
 static int override_drive_a = 0, override_drive_b = 0;
+static int override_cdrom = 0;
 
 int vid_resize, vid_api;
 
@@ -203,6 +204,7 @@ void initpc(int argc, char *argv[]) {
                         printf("--fullscreen      - start in fullscreen mode\n");
                         printf("--load_drive_a file.img - load drive A: with the given disc image\n");
                         printf("--load_drive_b file.img - load drive B: with the given disc image\n");
+                        printf("--load_cdrom file.cue - load CD-ROM image (.cue/.iso)\n");
                         exit(-1);
                 } else if (!strcasecmp(argv[c], "--fullscreen")) {
                         start_in_fullscreen = 1;
@@ -236,6 +238,13 @@ void initpc(int argc, char *argv[]) {
                         strncpy(discfns[1], argv[c + 1], 256);
                         c++;
                         override_drive_b = 1;
+                } else if (!strcasecmp(argv[c], "--load_cdrom")) {
+                        if ((c + 1) == argc)
+                                break;
+                        strncpy(image_path, argv[c + 1], sizeof(image_path) - 1);
+                        image_path[sizeof(image_path) - 1] = '\0';
+                        c++;
+                        override_cdrom = 1;
                 }
         }
 
@@ -471,6 +480,7 @@ void runpc() {
         int cycles_to_run = cpu_get_speed() / 100;
 
         override_drive_a = override_drive_b = 0;
+        override_cdrom = 0;
 
         startblit();
 
@@ -702,11 +712,13 @@ void loadconfig(char *fn) {
 
         zip_channel = config_get_int(CFG_MACHINE, NULL, "zip_channel", -1);
 
-        p = (char *)config_get_string(CFG_MACHINE, NULL, "cdrom_path", "");
-        if (p)
-                strcpy(image_path, p);
-        else
-                strcpy(image_path, "");
+        if (!override_cdrom) {
+                p = (char *)config_get_string(CFG_MACHINE, NULL, "cdrom_path", "");
+                if (p)
+                        strcpy(image_path, p);
+                else
+                        strcpy(image_path, "");
+        }
 
         hdc[0].spt = config_get_int(CFG_MACHINE, NULL, "hdc_sectors", 0);
         hdc[0].hpc = config_get_int(CFG_MACHINE, NULL, "hdc_heads", 0);

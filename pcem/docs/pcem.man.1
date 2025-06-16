@@ -3,7 +3,7 @@
 .SH NAME
 pcem \- PCem (short for PC Emulator) is an IBM PC emulator for Windows and Linux that specializes in running old operating systems and software that are designed for IBM PC compatibles.
 .SH SYNOPSIS
-pcem [--config {file.cfg}] [--fullscreen] [--load_drive_a {file.img}] [--load_drive_b {file.img}]
+pcem [--config {file.cfg}] [--fullscreen] [--load_drive_a {file.img}] [--load_drive_b {file.img}] [--load_cdrom {file.cue}]
 .SH DESCRIPTION
 PCem (short for PC Emulator) is an IBM PC emulator for Windows and Linux that specializes in running old operating systems and software that are designed for IBM PC compatibles. Originally developed as an IBM PC XT emulator, it later emulates other IBM PC compatible computers as well. (from wikipedia)
 .SH OPTIONS
@@ -19,6 +19,9 @@ start in fullscreen mode
 .TP
 .B --load_drive_b \fIfile.cfg\fR
 \fIfile.cfg\fR load drive B: with the given disc image
+.TP
+.B --load_cdrom \fIfile.cue\fR
+\fIfile.cue\fR load a CD-ROM image (.cue or .iso)
 .RE
 .SH BUGS
 No known bugs.
