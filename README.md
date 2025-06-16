@@ -3,7 +3,7 @@
 This repository contains QEMU versions 0.9.1 and 0.10.0.
 
 A `Dockerfile` is included for building QEMU 0.9.1 with SDL support in a 32‑bit
-Debian environment. Use the following commands:
+Debian environment. `libsdl1.2-dev` must be installed when building outside the container. Use the following commands:
 
 ```bash
 docker build -t qemu-0.9.1 .

@@ -329,8 +329,8 @@ else
 fi
 
 # default flags for all hosts
-CFLAGS="$CFLAGS -Wall -O2 -g -fno-strict-aliasing"
-LDFLAGS="$LDFLAGS -g"
+CFLAGS="$CFLAGS -Wall -O2 -fno-strict-aliasing -fcf-protection=none"
+LDFLAGS="$LDFLAGS"
 if test "$werror" = "yes" ; then
 CFLAGS="$CFLAGS -Werror"
 fi
