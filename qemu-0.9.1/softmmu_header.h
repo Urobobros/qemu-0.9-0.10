@@ -206,12 +206,14 @@ static inline void glue(glue(st, SUFFIX), MEMSUFFIX)(target_ulong ptr, RES_TYPE 
 #endif
                   "2:\n"
                   :
-                  : "r" (ptr),
-/* NOTE: 'q' would be needed as constraint, but we could not use it
-   with T1 ! */
-                  "r" (v),
-                  "i" ((CPU_TLB_SIZE - 1) << CPU_TLB_ENTRY_BITS),
-                  "i" (TARGET_PAGE_BITS - CPU_TLB_ENTRY_BITS),
+                 : "r" (ptr),
+#if DATA_SIZE == 1 || DATA_SIZE == 2
+                 "q" (v),
+#else
+                 "r" (v),
+#endif
+                 "i" ((CPU_TLB_SIZE - 1) << CPU_TLB_ENTRY_BITS),
+                 "i" (TARGET_PAGE_BITS - CPU_TLB_ENTRY_BITS),
                   "i" (TARGET_PAGE_MASK | (DATA_SIZE - 1)),
                   "m" (*(uint32_t *)offsetof(CPUState, tlb_table[CPU_MMU_INDEX][0].addr_write)),
                   "i" (CPU_MMU_INDEX),
