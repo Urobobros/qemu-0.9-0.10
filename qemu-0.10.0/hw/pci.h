@@ -53,6 +53,8 @@ extern target_phys_addr_t pci_mem_base;
 #define PCI_DEVICE_ID_DEC_21154          0x0026
 
 #define PCI_VENDOR_ID_CIRRUS             0x1013
+#define PCI_VENDOR_ID_S3                 0x5333
+#define PCI_DEVICE_ID_S3_VIRGE           0x8a01
 
 #define PCI_VENDOR_ID_IBM                0x1014
 #define PCI_DEVICE_ID_IBM_OPENPIC2       0xffff
