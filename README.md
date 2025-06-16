@@ -25,6 +25,7 @@ Pro lokální sestavení verze 0.10 je nutné nejprve nainstalovat potřebné z�
 sudo apt-get install build-essential libsdl1.2-dev libasound2-dev libfdt-dev libncurses-dev zlib1g-dev
 ```
 
+
 Zdrojové kódy v tomto repozitáři obsahují drobnou opravu, která umožňuje úspěšné
 zkompilování verze 0.10 i s novějšími překladači.
 
@@ -36,5 +37,3 @@ cd qemu-0.10.0
 make
 sudo make install
 ```
-
-
