@@ -53,6 +53,14 @@
 #include <netinet/ip.h>
 #include <netinet/tcp.h>
 
+#ifndef HAVE_STIME
+static inline int stime(const time_t *t)
+{
+    struct timeval tv = { .tv_sec = *t, .tv_usec = 0 };
+    return settimeofday(&tv, NULL);
+}
+#endif
+
 #define termios host_termios
 #define winsize host_winsize
 #define termio host_termio
@@ -1970,22 +1978,29 @@ static abi_long do_ipc(unsigned int call, int first,
         	ret = do_msgctl(first, second, ptr);
 		break;
 
-	case IPCOP_msgrcv:
+        case IPCOP_msgrcv:
+            switch (version) {
+            case 0:
                 {
-                      /* XXX: this code is not correct */
-                      struct ipc_kludge
-                      {
-                              void *__unbounded msgp;
-                              long int msgtyp;
-                      };
+                    struct target_ipc_kludge {
+                        abi_long msgp;
+                        abi_long msgtyp;
+                    } *tmp;
 
-                      struct ipc_kludge *foo = (struct ipc_kludge *)g2h(ptr);
-                      struct msgbuf *msgp = (struct msgbuf *) foo->msgp;
+                    if (!lock_user_struct(VERIFY_READ, tmp, ptr, 1)) {
+                        ret = -TARGET_EFAULT;
+                        break;
+                    }
 
-                      ret = do_msgrcv(first, (long)msgp, second, 0, third);
+                    ret = do_msgrcv(first, tmp->msgp, second, tmp->msgtyp, third);
 
+                    unlock_user_struct(tmp, ptr, 0);
+                    break;
                 }
-		break;
+            default:
+                ret = do_msgrcv(first, ptr, second, fifth, third);
+            }
+            break;
 
     case IPCOP_shmat:
         {

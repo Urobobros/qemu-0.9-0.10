@@ -32,7 +32,10 @@
 #undef EDI
 #undef EIP
 #include <signal.h>
-#include <sys/ucontext.h>
+#include <ucontext.h>
+#ifndef HAVE_STRUCT_UCONTEXT
+typedef ucontext_t ucontext;
+#endif
 #endif
 
 int tb_invalidated_flag;
@@ -104,7 +107,7 @@ void cpu_loop_exit(void)
 void cpu_resume_from_signal(CPUState *env1, void *puc)
 {
 #if !defined(CONFIG_SOFTMMU)
-    struct ucontext *uc = puc;
+    ucontext_t *uc = puc;
 #endif
 
     env = env1;
@@ -1201,7 +1204,7 @@ static inline int handle_cpu_signal(unsigned long pc, unsigned long address,
 #if defined(__i386__)
 
 #if defined(__APPLE__)
-# include <sys/ucontext.h>
+# include <ucontext.h>
 
 # define EIP_sig(context)  (*((unsigned long*)&(context)->uc_mcontext->ss.eip))
 # define TRAP_sig(context)    ((context)->uc_mcontext->es.trapno)
@@ -1216,7 +1219,7 @@ int cpu_signal_handler(int host_signum, void *pinfo,
                        void *puc)
 {
     siginfo_t *info = pinfo;
-    struct ucontext *uc = puc;
+    ucontext_t *uc = puc;
     unsigned long pc;
     int trapno;
 
@@ -1240,7 +1243,7 @@ int cpu_signal_handler(int host_signum, void *pinfo,
                        void *puc)
 {
     siginfo_t *info = pinfo;
-    struct ucontext *uc = puc;
+    ucontext_t *uc = puc;
     unsigned long pc;
 
     pc = uc->uc_mcontext.gregs[REG_RIP];
@@ -1277,8 +1280,8 @@ int cpu_signal_handler(int host_signum, void *pinfo,
 #endif /* linux */
 
 #ifdef __APPLE__
-# include <sys/ucontext.h>
-typedef struct ucontext SIGCONTEXT;
+# include <ucontext.h>
+typedef ucontext_t SIGCONTEXT;
 /* All Registers access - only for local access */
 # define REG_sig(reg_name, context)		((context)->uc_mcontext->ss.reg_name)
 # define FLOATREG_sig(reg_name, context)	((context)->uc_mcontext->fs.reg_name)
@@ -1305,7 +1308,7 @@ int cpu_signal_handler(int host_signum, void *pinfo,
                        void *puc)
 {
     siginfo_t *info = pinfo;
-    struct ucontext *uc = puc;
+    ucontext_t *uc = puc;
     unsigned long pc;
     int is_write;
 
@@ -1329,7 +1332,7 @@ int cpu_signal_handler(int host_signum, void *pinfo,
                            void *puc)
 {
     siginfo_t *info = pinfo;
-    struct ucontext *uc = puc;
+    ucontext_t *uc = puc;
     uint32_t *pc = uc->uc_mcontext.sc_pc;
     uint32_t insn = *pc;
     int is_write = 0;
@@ -1393,7 +1396,7 @@ int cpu_signal_handler(int host_signum, void *pinfo,
                        void *puc)
 {
     siginfo_t *info = pinfo;
-    struct ucontext *uc = puc;
+    ucontext_t *uc = puc;
     unsigned long pc;
     int is_write;
 
@@ -1411,7 +1414,7 @@ int cpu_signal_handler(int host_signum, void *pinfo,
                        void *puc)
 {
     siginfo_t *info = pinfo;
-    struct ucontext *uc = puc;
+    ucontext_t *uc = puc;
     unsigned long pc;
     int is_write;
 
@@ -1433,7 +1436,7 @@ int cpu_signal_handler(int host_signum, void *pinfo,
 int cpu_signal_handler(int host_signum, void *pinfo, void *puc)
 {
     siginfo_t *info = pinfo;
-    struct ucontext *uc = puc;
+    ucontext_t *uc = puc;
     unsigned long ip;
     int is_write = 0;
 
@@ -1463,7 +1466,7 @@ int cpu_signal_handler(int host_signum, void *pinfo,
                        void *puc)
 {
     siginfo_t *info = pinfo;
-    struct ucontext *uc = puc;
+    ucontext_t *uc = puc;
     unsigned long pc;
     int is_write;
 
@@ -1480,7 +1483,7 @@ int cpu_signal_handler(int host_signum, void *pinfo,
                        void *puc)
 {
     siginfo_t *info = pinfo;
-    struct ucontext *uc = puc;
+    ucontext_t *uc = puc;
     greg_t pc = uc->uc_mcontext.pc;
     int is_write;
 
