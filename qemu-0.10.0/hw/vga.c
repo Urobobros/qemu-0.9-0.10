@@ -2242,8 +2242,8 @@ void vga_dirty_log_stop(VGAState *s)
     }
 }
 
-void vga_map(PCIDevice *pci_dev, int region_num,
-             uint32_t addr, uint32_t size, int type)
+static void vga_map(PCIDevice *pci_dev, int region_num,
+                    uint32_t addr, uint32_t size, int type)
 {
     PCIVGAState *d = (PCIVGAState *)pci_dev;
     VGAState *s = &d->vga_state;

@@ -36,3 +36,25 @@ cd qemu-0.10.0
 make
 sudo make install
 ```
+
+## Rychlý test disku
+
+Po úspěšné kompilaci lze rychle spustit QEMU s malým qcow2 diskovým obrazem:
+
+```bash
+./scripts/run_test_disk.sh               # vytvoří 'disk.img' a spustí QEMU
+# QUIET=1 ./scripts/run_test_disk.sh     # tichý režim
+```
+
+Skript použije `qemu-img` pro vytvoření 64MB obrazu (pokud neexistuje) a
+předá jej jako parametr `-hda`.
+
+Pro spuštění hry používající CD audio lze předat soubor `.cue` a zapnout
+ladicí výpisy pomocí proměnné prostředí `DEBUG_PRINTS`:
+
+```bash
+DEBUG_PRINTS=1 ./qemu-0.10.0/i386-softmmu/qemu -L ./qemu-0.10.0/pc-bios \
+    -cdrom cesta/k/souboru.cue -m 64
+```
+
+Pokud `DEBUG_PRINTS` nenastavíte, nebudou se zobrazovat dodatečné ladicí zprávy.
